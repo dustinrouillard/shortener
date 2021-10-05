@@ -35,8 +35,8 @@ export async function trackVisit(code: string, ip: string, userAgent: string): P
   const recentlyTracked = await ShortenerDB.get(`stats/${code}/${ip}/tracked`);
   if (recentlyTracked) return;
 
-  const getStats = await ShortenerDB.get(`stats/${code}`);
-  let stats = getStats ? JSON.parse(getStats) : { visits: 0 };
+  const getStats = await ShortenerDB.get<{ visits: number }>(`stats/${code}`, { type: 'json' });
+  const stats = getStats || { visits: 0 };
   stats.visits++;
 
   await ShortenerDB.put(`stats/${code}/${ip}/tracked`, 'true', { expirationTtl: 3600 });
