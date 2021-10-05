@@ -1,7 +1,7 @@
 import { Upstream } from "../config";
 import { CraftedResponse, ParsedRequest } from "../types/Routes";
 import { getIp } from "../utils/ip";
-import { createShortLink, deleteShortLink, getShortLink, getShortLinkStats, trackVisit } from "../utils/kv";
+import { createShortLink, deleteShortLink, getShortLink, getShortLinkStats, getShortLinks, trackVisit } from "../utils/kv";
 import { random } from "../utils/strings";
 
 export async function Create(request: ParsedRequest<{ Body: { target: string; code?: string; ttl?: number } }>, response: CraftedResponse) {
@@ -30,4 +30,9 @@ export async function Delete(request: ParsedRequest<{ Params: { code: string } }
 export async function GetStats(request: ParsedRequest<{ Params: { code: string } }>, response: CraftedResponse) {
   const link = await getShortLinkStats(request.params.code);
   return response.status(200).send(link);
+}
+
+export async function GetLinks(request: ParsedRequest, response: CraftedResponse) {
+  const links = await getShortLinks();
+  return response.status(200).send(links);
 }

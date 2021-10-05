@@ -15,6 +15,16 @@ export async function getShortLinkStats(code: string): Promise<{ code: string, t
   return { code, target: data.target, visits: stats?.visits || 0 };
 }
 
+export async function getShortLinks(): Promise<({ code: string, target: string; visits: number } | null)[]> {
+  const links = await ShortenerDB.list({ prefix: 'links/' });
+
+  const runs = [];
+  for (const link of links.keys) runs.push(getShortLinkStats(link.name.split('links/')[1]));
+  const res = await Promise.all(runs);
+
+  return res.sort((a, b) => ((b && a) ? b.visits - a.visits : 1));
+}
+
 export async function deleteShortLink(code: string): Promise<boolean | null> {
   const data = await ShortenerDB.get(`links/${code}`, { cacheTtl: 60 });
   if (!data) return null;
