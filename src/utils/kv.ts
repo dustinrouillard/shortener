@@ -49,9 +49,11 @@ export async function trackVisit(code: string, ip: string, userAgent: string): P
   const stats = getStats || { visits: 0 };
   stats.visits++;
 
-  await ShortenerDB.put(`stats/${code}/${ip}/tracked`, 'true', { expirationTtl: 3600 });
-  await ShortenerDB.put(`stats/${code}`, JSON.stringify(stats));
-  await ShortenerDB.put(`visits/${Buffer.from(`${new Date().getTime()}:${userAgent}:${ip}`).toString('base64')}`, JSON.stringify({ code, ip, userAgent, time: new Date().toISOString() }));
+  await Promise.all([
+    ShortenerDB.put(`stats/${code}/${ip}/tracked`, 'true', { expirationTtl: 3600 }),
+    ShortenerDB.put(`stats/${code}`, JSON.stringify(stats)),
+    ShortenerDB.put(`visits/${Buffer.from(`${new Date().getTime()}:${userAgent}:${ip}`).toString('base64')}`, JSON.stringify({ code, ip, userAgent, time: new Date().toISOString() }))
+  ]);
 
   return;
 }
