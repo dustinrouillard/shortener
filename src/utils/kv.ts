@@ -3,9 +3,16 @@ declare const SHORTENER_DSTN: KVNamespace;
 export const ShortenerDB = SHORTENER_DSTN;
 
 export async function getShortLink(code: string): Promise<{ code: string, target: string; ttl?: number } | null> {
-  const data = await ShortenerDB.get(`links/${code}`, { cacheTtl: 60 });
+  return await ShortenerDB.get<{ code: string, target: string; ttl?: number }>(`links/${code}`, { cacheTtl: 60, type: 'json' });
+}
+
+export async function getShortLinkStats(code: string): Promise<{ code: string, target: string; visits: number } | null> {
+  const data = await ShortenerDB.get<{ code: string, target: string; }>(`links/${code}`, { cacheTtl: 60, type: 'json' });
   if (!data) return null;
-  else return JSON.parse(data);
+
+  const stats = await ShortenerDB.get<{ visits: number }>(`stats/${code}`, { cacheTtl: 60, type: 'json' });
+
+  return { code, target: data.target, visits: stats?.visits || 0 };
 }
 
 export async function deleteShortLink(code: string): Promise<boolean | null> {
