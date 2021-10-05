@@ -1,9 +1,8 @@
-# Cloudflare Worker Template
+# Shortener
 
-This is a cloudflare worker starter template that uses Typescript, and a route parser to give you a level of route control that a more traditional api library would provide.
+This is nothing special, just a normal run of the mill URL shortener which I use to power [dstn.to](https://dstn.to)
 
-## Documentation
+Uses my [Cloudflare worker template](https://dstn.to/cf-worker-template)
 
-I will come through and write all the features and functionality of this worker template in a few days.
+The data is stored in Workers K/V and the authentication is done using JWT currently.
 
-For now the important things to note is that you need to fill out the wrangler.toml with your details and you can use the npm commands (deploy, and devploy) to deploy them to cloudflare.
