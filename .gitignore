@@ -1,0 +1,13 @@
+# Packages
+node_modules
+
+# Built files
+dist
+worker
+
+# Miniflare
+.mf
+.env
+
+# Misc
+yarn-error.log
