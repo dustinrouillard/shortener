@@ -36,7 +36,7 @@ export interface CraftedResponse {
   redirect: (link: string, code?: number | 302) => void;
 }
 
-export type Middleware = (request: ParsedRequest, response: CraftedResponse) => void
+export type Middleware = (request: ParsedRequest, response: CraftedResponse) => void | boolean | Promise<void | boolean>;
 
 export interface RouteDefinition {
   route: Route<{ [i: string]: any; }>;

@@ -8,5 +8,5 @@ export function Management(request: ParsedRequest, response: CraftedResponse) {
   const valid = validate(token);
   if (!valid) return response.status(403).send({ error: 'invalid_authentication' });
 
-  return;
+  return true;
 }

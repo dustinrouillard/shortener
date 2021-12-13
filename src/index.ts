@@ -1,7 +1,7 @@
 import { routes } from './routes';
 
 import { CraftedResponse, Method, ParsedRequest } from './types/Routes';
-import { Base } from './methods/base';
+import { NotFound } from './methods/notfound';
 
 addEventListener('fetch', (event) => {
   event.respondWith(new Promise(async (resolve) => {
@@ -61,8 +61,11 @@ addEventListener('fetch', (event) => {
       }
     }
 
-    if (route?.middlewares) for (const middleware of route.middlewares) middleware(req, res);
+    if (route?.middlewares) for await (const middleware of route.middlewares) {
+      let mw = await middleware(req, res);
+      if (!mw) return mw;
+    }
 
-    route ? route.handler(req, res) : Base(req, res);
+    route ? route.handler(req, res) : NotFound(req, res);
   }));
 });
